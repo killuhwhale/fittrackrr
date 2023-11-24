@@ -1,0 +1,9 @@
+android/.gradle/
+android/gradle.properties
+android/app/build/
+android/app/src/main/assets/
+android/app/src/main/res/xml/
+android/link-assets-manifest.json
+ios/link-assets-manifest.json
+ios/FitForm/Info.plist
+node_modules/

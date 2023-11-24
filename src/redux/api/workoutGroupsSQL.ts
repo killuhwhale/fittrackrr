@@ -1,0 +1,11 @@
+const CREATE_WORKOUT_GROUPS = `CREATE TABLE IF NOT EXISTS WorkoutGroups (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    finished INTEGER DEFAULT 0,
+    for_date DATETIME,
+    title TEXT NOT NULL,
+    caption TEXT,
+    date DATETIME DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(title)
+);`;
+
+export default CREATE_WORKOUT_GROUPS;

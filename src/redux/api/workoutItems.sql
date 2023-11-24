@@ -1,0 +1,23 @@
+CREATE TABLE IF NOT EXISTS WorkoutItems (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    workout_id INTEGER,
+    name_id INTEGER,
+    ssid INTEGER DEFAULT -1,
+    constant INTEGER DEFAULT 0,
+    sets INTEGER DEFAULT 0,
+    reps TEXT DEFAULT '[0]',
+    pause_duration REAL DEFAULT 0.00,
+    duration TEXT DEFAULT '[0]',
+    duration_unit INTEGER DEFAULT 0,
+    distance TEXT DEFAULT '[0]',
+    distance_unit INTEGER DEFAULT 0,
+    weights TEXT DEFAULT '[]',
+    weight_unit TEXT DEFAULT 'kg',
+    rest_duration REAL DEFAULT 0.0,
+    rest_duration_unit INTEGER DEFAULT 0,
+    percent_of TEXT DEFAULT '',
+    order INTEGER,
+    date DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (workout_id) REFERENCES Workouts(id),
+    FOREIGN KEY (name_id) REFERENCES WorkoutNames(id)
+);
