@@ -17,18 +17,17 @@ import {
 } from '../../utils/fetchAPI';
 import auth from '../../utils/auth';
 import {Member} from '../../app_components/modals/types';
-import CREATE_WORKOUT_GROUPS from './workoutGroupsSQL';
+// import CREATE_WORKOUT_GROUPS from './workoutGroupsSQL';
+import {
+  CREATE_WORKOUTS,
+  CREATE_WORKOUT_CATEGORIES,
+  CREATE_WORKOUT_GROUPS,
+  CREATE_WORKOUT_ITEMS,
+  CREATE_WORKOUT_NAMES,
+} from './schema';
 import SQLite from 'react-native-sqlite-storage';
 import RNFS from 'react-native-fs';
 
-const readSqlFile = async filePath => {
-  try {
-    const sqlContent = await RNFS.readFile(filePath, 'utf8');
-    return sqlContent;
-  } catch (error) {
-    console.error('Error reading SQL file:', error);
-  }
-};
 const db = SQLite.openDatabase(
   {
     name: 'fittrackrr',
@@ -43,22 +42,30 @@ const db = SQLite.openDatabase(
 );
 db.executeSql('PRAGMA foreign_keys = ON;');
 
-function createWorkoutGroupTable(db) {
+function create(db) {
   db.transaction(tx => {
-    tx.executeSql(
+    [
       CREATE_WORKOUT_GROUPS,
-      [],
-      () => {
-        console.log('Table created successfully');
-      },
-      error => {
-        console.log('Error: ' + error);
-      },
-    );
+      CREATE_WORKOUT_CATEGORIES,
+      CREATE_WORKOUTS,
+      CREATE_WORKOUT_NAMES,
+      CREATE_WORKOUT_ITEMS,
+    ].map(sql => {
+      tx.executeSql(
+        sql,
+        [],
+        () => {
+          console.log('Create successful');
+        },
+        error => {
+          console.log('Error: ' + error);
+        },
+      );
+    });
   });
 }
 
-createWorkoutGroupTable(db);
+create(db);
 
 // db.transaction(tx => {
 //   tx.executeSql(
@@ -74,6 +81,115 @@ createWorkoutGroupTable(db);
 //     error => { console.log('Error: ' + error); }
 //   );
 // });
+
+function fetchSQL(query) {
+  return new Promise((res, rej) => {
+    db.transaction(tx => {
+      tx.executeSql(
+        query,
+        [],
+        (tx, results) => {
+          res(results);
+          // var len = results.rows.length;
+          // for (let i = 0; i < len; i++) {
+          //   let row = results.rows.item(i);
+          //   console.log(`ID: ${row.id}, Name: ${row.name}, Age: ${row.age}`);
+          // }
+        },
+        error => {
+          console.log('Error: ' + error);
+          rej(error);
+        },
+      );
+    });
+  });
+}
+
+async function fetchAPI(url, method, data) {
+  // Switch on url to generate the query
+  let query = '';
+  if (!method) {
+    method = 'GET';
+  }
+  if (!data) {
+    data = {};
+  }
+
+  console.log('FetchAPI: ', method, url, data);
+  // Figure out the query.
+
+  /**
+   *
+   *  Write all the queries for this to work and we should be getting started!!!!
+   *
+   *
+   *
+   *
+   */
+  switch (url) {
+    case 'WorkoutGroups':
+      switch (method) {
+        case 'POST':
+          // Post to WorkoutGroups
+          query = 'INSERT INTO WORKOUTITEMS ()';
+          break;
+        case 'GET':
+          query = 'SELECT FROM WORKOUTITEMS ()';
+          break;
+        case 'DELETE':
+          query = 'DELETE FROM WORKOUTITEMS ()';
+          break;
+        default:
+          break;
+      }
+      break;
+
+    case 'Workouts':
+      switch (method) {
+        case 'POST':
+          // Post to WorkoutGroups
+          query = 'INSERT INTO WORKOUTITEMS ()';
+          break;
+        case 'GET':
+          query = 'SELECT FROM WORKOUTITEMS ()';
+          break;
+        case 'DELETE':
+          query = 'DELETE FROM WORKOUTITEMS ()';
+          break;
+        default:
+          break;
+      }
+      break;
+
+    case 'WorkoutItems':
+      switch (method) {
+        case 'POST':
+          // Post to WorkoutGroups
+          query = 'INSERT INTO WORKOUTITEMS ()';
+          break;
+        case 'GET':
+          query = 'SELECT FROM WORKOUTITEMS ()';
+          break;
+        case 'DELETE':
+          query = 'DELETE FROM WORKOUTITEMS ()';
+          break;
+        default:
+          break;
+      }
+      break;
+
+    default:
+      break;
+  }
+
+  // Execute Query
+  try {
+    return await fetchSQL(query);
+  } catch (err) {
+    console.log('Error with API: ', err);
+  }
+  return null;
+}
 
 const asyncBaseQuery =
   (
@@ -93,23 +209,23 @@ const asyncBaseQuery =
   > =>
   async ({url, method, data, params}) => {
     try {
-      if (!method) {
-        method = 'get';
-      }
-      const contentType = params?.contentType || 'application/json';
+      // if (!method) {
+      //   method = 'get';
+      // }
+      // const contentType = params?.contentType || 'application/json';
 
-      let options: {method: string; headers: any; body: any} = {
-        method: method,
-        headers: {
-          'Content-Type': contentType, // This has been contentType since I created it and DELETE methods work. All of a sudden it stopped working... until changing it to 'Content-Type'
-        },
-        body: '',
-      };
-      console.log('ApiSlice');
-      console.log('ApiSlice');
-      console.log('Data: ', data);
-      console.log('url/ method: ', baseUrl, url, method);
-      console.log('BODY: ', baseUrl + url, options);
+      // let options: {method: string; headers: any; body: any} = {
+      //   method: method,
+      //   headers: {
+      //     'Content-Type': contentType, // This has been contentType since I created it and DELETE methods work. All of a sudden it stopped working... until changing it to 'Content-Type'
+      //   },
+      //   body: '',
+      // };
+      // console.log('ApiSlice');
+      // console.log('ApiSlice');
+      // console.log('Data: ', data);
+      // console.log('url/ method: ', baseUrl, url, method);
+      // console.log('BODY: ', baseUrl + url, options);
 
       /**
        *
@@ -126,7 +242,10 @@ const asyncBaseQuery =
       // Fetch from db...
       // const result = await fetch(baseUrl + url, options);
       // const jResult = await result.json();
-      return {data: {}};
+
+      const result = await fetchAPI(url, method, data);
+
+      return {data: result};
     } catch (err: any) {
       console.log('Errorzzzzzz: ', err);
       return {

@@ -77,6 +77,22 @@ adb -s emulator-5554 reverse tcp:8081 tcp:8081
 adb -s emulator-5554 reverse tcp:8000 tcp:8000
 npx react-native start
 
+Android SQL File
+
+# Restart adbd as root
+
+adb root
+
+# Enter shell now as root
+
+adb shell
+
+# Move to database dir
+
+## /data/data/com.fitform/databases
+
+sqlite3 fittrackrr
+
 // When building your android app locally, by default you build all the 4 Application
 // Binary Interfaces (ABIs) : armeabi-v7a, arm64-v8a, x86 & x86_64.
 cd android/ && ./gradlew clean && cd .. && npx react-native run-android --active-arch-only
