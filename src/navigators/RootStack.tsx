@@ -219,7 +219,7 @@ function HomePageTabs() {
         }}
       />
 
-      <Tab.Screen
+      {/* <Tab.Screen
         name="Snapshot"
         component={DailySnapshotScreen}
         options={{
@@ -234,7 +234,7 @@ function HomePageTabs() {
           tabBarIcon: ({color, focused, size}) =>
             tabBarIcon('apps-outline', focused, size, theme),
         }}
-      />
+      /> */}
 
       <Tab.Screen
         name="Stats"

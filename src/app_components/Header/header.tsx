@@ -48,7 +48,7 @@ const Header: FunctionComponent<{showBackButton: boolean}> = ({
       <TouchableOpacity
         activeOpacity={0.69}
         onPress={() => {
-          RootNavigation.navigate('HomePage', {});
+          RootNavigation.navigate('My Workouts', {});
         }}>
         <View
           style={{flexDirection: 'row', paddingVertical: 8, marginLeft: 12}}>

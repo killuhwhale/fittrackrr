@@ -349,7 +349,7 @@ async function getFullWorkoutGroup(id) {
     return {
       workout_group: {
         finished: workoutGroupData.finished,
-        for_date: new Date(workoutGroupData.for_date),
+        for_date: new Date(workoutGroupData.for_date).toString(),
         caption: workoutGroupData.caption,
         date: workoutGroupData.date,
         title: workoutGroupData.title,
