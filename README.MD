@@ -93,6 +93,73 @@ adb shell
 
 sqlite3 fittrackrr
 
+
+
+
+SQLite3 Command Cheat Sheet
+
+# General Commands
+Start SQLite3: sqlite3 [database_name.db]
+If the database does not exist, SQLite3 will create it.
+Exit SQLite3: .exit or .quit
+
+# Database Management
+List Databases: .databases
+Show Current Database: PRAGMA database_list;
+Show Tables in Current Database: .tables
+Show Schema of Table: .schema [table_name]
+
+# Table Management
+## Create Table:
+CREATE TABLE [table_name] (
+    [column1_name] [column1_datatype] [column1_constraint],
+    [column2_name] [column2_datatype] [column2_constraint],
+    ...
+);
+
+## Alter Table (e.g., add a column):
+ALTER TABLE [table_name] ADD COLUMN [column_name] [data_type];
+Drop Table: DROP TABLE [table_name];
+
+
+## Insert Data:
+INSERT INTO [table_name] ([column1], [column2], ...) VALUES ([value1], [value2], ...);
+
+## Update Data:
+UPDATE [table_name] SET [column1] = [value1], [column2] = [value2] WHERE [condition];
+
+## Delete Data:
+DELETE FROM [table_name] WHERE [condition];
+
+## Select Data:
+SELECT * FROM [table_name];
+SELECT [column1], [column2] FROM [table_name] WHERE [condition];
+
+
+Begin Transaction: BEGIN TRANSACTION;
+Commit Transaction: COMMIT;
+Rollback Transaction: ROLLBACK;
+
+# Index Management
+Create Index: CREATE INDEX [index_name] ON [table_name]([column_name]);
+Drop Index: DROP INDEX [index_name];
+
+# Other Useful Commands
+Explain Query Plan: EXPLAIN QUERY PLAN [sql_query];
+Show SQLite Version: .version
+Import Data from File: .import [file_path] [table_name]
+Backup Database: .backup main [file_name.db]
+Restore Database: .restore main [file_name.db]
+
+# SQL Commands
+All standard SQL commands (SELECT, INSERT, UPDATE, DELETE, etc.) are supported in SQLite3.
+
+## Formatting and Preferences
+Turn on Header Display: .headers ON
+Turn on Column Mode: .mode column
+Set Output Format: .mode [mode] (e.g., .mode csv)
+
+
 // When building your android app locally, by default you build all the 4 Application
 // Binary Interfaces (ABIs) : armeabi-v7a, arm64-v8a, x86 & x86_64.
 cd android/ && ./gradlew clean && cd .. && npx react-native run-android --active-arch-only

@@ -93,7 +93,7 @@ const tabBarLabel = (
   <XSmallText
     textStyles={{
       color: focused ? theme.palette.accent : theme.palette.text,
-      height: Platform.OS === 'ios' ? '50%' : '0%',
+      height: Platform.OS === 'ios' ? '50%' : '30%',
     }}>
     {labelText}
   </XSmallText>
@@ -206,6 +206,11 @@ function HomePageTabs() {
           tabBarStyle: tabBarStyle(tabBarColor),
           tabBarItemStyle: {
             marginBottom: tabBarMarginBottom,
+          },
+          tabBarLabelStyle: {
+            marginBottom: 10,
+            color: 'white',
+            fontSize: 30,
           },
           tabBarLabel: ({color, focused, position}) =>
             tabBarLabel('My Workouts', focused, theme),

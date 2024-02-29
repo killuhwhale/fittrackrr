@@ -28,9 +28,8 @@ const WorkoutCard: FunctionComponent<WorkoutCardProps> = props => {
   const navigation = useNavigation<GymClassScreenProps['navigation']>();
 
   const [deleteWorkout, {isLoading}] = useDeleteWorkoutMutation();
-  const [deleteCompletedWorkout, {isLoading: deleteCompletedWorkoutIsLoading}] =
-    useDeleteCompletedWorkoutMutation();
-  // console.log("Workout card props: ", props)
+
+  // console.log('Workout card props: ', props);
   const isOGWorkout = props.workout_items ? true : false;
   const items = props.workout_items
     ? props.workout_items
@@ -45,14 +44,10 @@ const WorkoutCard: FunctionComponent<WorkoutCardProps> = props => {
   };
 
   const _deleteWorkout = () => {
-    if (isOGWorkout) {
-      const data = new FormData();
-      data.append('group', props.group?.id);
-      data.append('id', props.id);
-      deleteWorkout(data);
-    } else {
-      deleteCompletedWorkout(props.id);
-    }
+    const data = new FormData();
+    data.append('group', props.group?.id);
+    data.append('id', props.id);
+    deleteWorkout(data);
   };
 
   return (

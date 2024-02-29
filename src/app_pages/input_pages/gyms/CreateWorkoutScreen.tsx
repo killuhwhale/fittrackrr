@@ -64,6 +64,7 @@ import AlertModal from '../../../app_components/modals/AlertModal';
 import CreateWorkoutItemList from './workoutScreen/CreateWorkoutItemList';
 import CreateWorkoutDualItemList from './workoutScreen/CreateWorkoutDualItemList';
 import SchemeField from './workoutScreen/Schemes';
+import {SQLResult} from '../../../redux/api/apiHelpers';
 export type Props = StackScreenProps<RootStackParamList, 'CreateWorkoutScreen'>;
 
 export const COLORSPALETTE = [
@@ -289,12 +290,14 @@ const CreateWorkoutScreen: FunctionComponent<Props> = ({
     );
 
     try {
-      const createdWorkout = await createWorkout(workoutData).unwrap();
+      const createdWorkout = (await createWorkout(
+        workoutData,
+      ).unwrap()) as SQLResult;
       console.log('Workout res', createdWorkout);
 
       // TODO() Catch this error better, shoudl return a specific error num for  unique constraint errors.
       // eslint-disable-next-line dot-notation
-      if (createdWorkout['err_type'] >= 0) {
+      if (createdWorkout.error) {
         console.log('Failed to create workout', createdWorkout.error);
         setCreateWorkoutError('Workout with this name already exists.');
         return;
@@ -307,7 +310,7 @@ const CreateWorkoutScreen: FunctionComponent<Props> = ({
       });
 
       data.append('items', JSON.stringify(items));
-      data.append('workout', createdWorkout.id);
+      data.append('workout', createdWorkout.result?.insertId);
       data.append('workout_group', workoutGroupID);
       let createdItems;
       if (schemeType <= 2) {
@@ -315,6 +318,7 @@ const CreateWorkoutScreen: FunctionComponent<Props> = ({
         createdItems = await createWorkoutItem(data).unwrap();
       } else {
         // For Time based workouts, or do you best workouts, we store prescription and record separately
+        console.log('CREATING new Dual Workout Items...');
         createdItems = await createWorkoutDualItem(data).unwrap();
       }
       console.log('Workout item res', createdItems);

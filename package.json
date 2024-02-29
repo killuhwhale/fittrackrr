@@ -57,6 +57,7 @@
     "shallow-clone": "^3.0.1",
     "styled-components": "^5.3.5",
     "twrnc": "^3.6.0",
+    "url": "^0.11.3",
     "uuid": "^9.0.0"
   },
   "devDependencies": {

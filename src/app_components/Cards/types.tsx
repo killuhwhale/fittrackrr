@@ -106,7 +106,7 @@ export interface WorkoutDualItemProps {
   rest_duration_unit: number;
   percent_of: string;
 
-  finished?: boolean;
+  finished?: number;
   penalty?: string;
   r_sets?: number;
   r_reps?: string;

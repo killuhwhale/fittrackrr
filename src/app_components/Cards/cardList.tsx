@@ -91,7 +91,7 @@ const WorkoutCardFullList: FunctionComponent<WorkoutCardListProps> = props => {
             editable={props.editable}
             for_date={props.group.for_date}
             {...item}
-            ownedByClass={props.group.owned_by_class}
+            ownedByClass={false}
           />
         );
       })}

@@ -49,7 +49,7 @@ const WorkoutGroupGridItem: FunctionComponent<{
         underlayColor="transparent">
         <LinearGradient
           colors={[startColor!, endColor!]} // Turquoise
-          start={{x: 0.00, y: 0}}
+          start={{x: 0.0, y: 0}}
           end={{x: 0.9, y: 1}}
           style={{flex: 1, borderRadius: 16}}>
           <View
@@ -59,9 +59,9 @@ const WorkoutGroupGridItem: FunctionComponent<{
               alignItems: 'center',
             }}>
             <Image
-                style={{width: 40, height: 40, borderRadius: 16}}
-                source={moc}
-              />
+              style={{width: 40, height: 40, borderRadius: 16}}
+              source={moc}
+            />
             <View style={{flex: 5}}>
               <View style={{marginVertical: 4}}>
                 <TSParagrapghText
@@ -71,24 +71,26 @@ const WorkoutGroupGridItem: FunctionComponent<{
                 </TSParagrapghText>
                 <TSCaptionText
                   numberOfLines={1}
-                  textStyles={{textAlign: 'left', marginLeft: 16, color: textColor}}>
+                  textStyles={{
+                    textAlign: 'left',
+                    marginLeft: 16,
+                    color: textColor,
+                  }}>
                   {dateFormatDayOfWeek(new Date(props.card.for_date))}{' '}
                 </TSCaptionText>
               </View>
             </View>
-            <View style={{flex: 1, alignItems: 'center'}}>
+            <View style={{flex: 2, alignItems: 'center'}}>
               <Icon
-                name={props.card.completed ? "checkmark-circle-outline" : "locate"}
-                color={props.card.completed ? green : theme.palette.text}
+                name={
+                  props.card.finished ? 'checkmark-circle-outline' : 'locate'
+                }
+                color={props.card.finished ? green : theme.palette.text}
                 style={{fontSize: 24, marginRight: 8}}
               />
-              {props.card.owned_by_class === true ? (
-                <></>
-              ) : (
-                <XSmallText textStyles={{textAlign: 'right', marginRight: 14}}>
-                  {props.card.owned_by_class === false ? 'you' : 'class'}
-                </XSmallText>
-              )}
+              <XSmallText textStyles={{textAlign: 'right', marginRight: 8}}>
+                {props.card.finished ? 'Done' : 'finish me'}
+              </XSmallText>
             </View>
           </View>
         </LinearGradient>

@@ -71,7 +71,7 @@ const bLineData = (workouts: any[], tagName, metric) => {
   workouts
     .sort((a, b) => (a['date'] < b['date'] ? -1 : 1))
     .forEach(workoutStats => {
-      // console.log('bLineData:', workoutStats);
+      console.log('bLineData:', workoutStats);
       labels.push(shortDateFormat(new Date(workoutStats.date)));
 
       if (workoutStats[tagName] && workoutStats[tagName][metric]) {

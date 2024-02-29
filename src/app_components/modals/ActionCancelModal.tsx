@@ -23,7 +23,7 @@ const ActionCancelModal: FunctionComponent<{
   containerStyle?: StyleProp<ViewStyle>;
 }> = props => {
   const theme = useTheme();
-  console.log('ACM: ', props.modalVisible);
+  console.log('ActionCancelModal: ', props.modalVisible);
 
   return (
     <Modal

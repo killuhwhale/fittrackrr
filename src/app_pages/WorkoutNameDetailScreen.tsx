@@ -32,7 +32,7 @@ const WorkoutNameDetailScreen: FunctionComponent<Props> = ({
   const theme = useTheme();
   const {id, name, primary, secondary, desc, categories, media_ids, date} =
     params || {};
-
+  console.log('WorkoutNameDetailScreen params: ', params);
   return (
     <ScreenContainer>
       <View style={{width: '100%'}}>

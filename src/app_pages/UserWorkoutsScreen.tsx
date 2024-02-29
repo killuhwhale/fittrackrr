@@ -22,28 +22,26 @@ import BannerAddMembership from '../app_components/ads/BannerAd';
 const UserWorkoutsScreen: FunctionComponent = props => {
   const theme = useTheme();
 
-  // const {
-  //   data: dataWG,
-  //   isLoading: isLoadingWG,
-  //   isSuccess: isSuccessWG,
-  //   isError: isErrorWG,
-  //   error: errorWG,
-  // } = useGetProfileWorkoutGroupsQuery('');
+  const {
+    data: dataWG,
+    isLoading: isLoadingWG,
+    isSuccess: isSuccessWG,
+    isError: isErrorWG,
+    error: errorWG,
+  } = useGetProfileWorkoutGroupsQuery('');
 
+  // Dont need since we dont need user id...
   // const {data, isLoading, isSuccess, isError, error} =
   //   useGetProfileViewQuery('');
+  console.log('useGetProfileWorkoutGroupsQuery dataWG: ', dataWG);
+  // console.log('UserWorkoutsScreen data: ', data);
 
-  // const _userWorkouts =
-  //   !isLoadingWG && isSuccessWG
-  //     ? ([
-  //         ...dataWG.workout_groups?.created_workout_groups,
-  //         ...dataWG.workout_groups?.completed_workout_groups,
-  //       ] as WorkoutGroupCardProps[])
-  //     : [];
+  const _userWorkouts = dataWG ? dataWG : [];
 
-  // const userWorkouts = _userWorkouts.sort((a, b) =>
-  //   a.for_date > b.for_date ? -1 : 1,
-  // );
+  const userWorkouts = _userWorkouts?.sort((a, b) =>
+    a.for_date > b.for_date ? -1 : 1,
+  );
+  console.log('_userWorkouts: ', _userWorkouts);
 
   return (
     <View
@@ -54,7 +52,7 @@ const UserWorkoutsScreen: FunctionComponent = props => {
         backgroundColor: theme.palette.backgroundColor,
       }}>
       <BannerAddMembership />
-      {/* {userWorkouts.length ? (
+      {userWorkouts.length ? (
         <View style={{padding: 12, flex: 1, height: '100%', width: '100%'}}>
           <View
             style={{
@@ -67,7 +65,8 @@ const UserWorkoutsScreen: FunctionComponent = props => {
               onPress={() => {
                 RootNavigation.navigate('CreateWorkoutGroupScreen', {
                   ownedByClass: false,
-                  ownerID: data.user.id,
+                  ownerID: 0,
+                  // ownerID: data.user.id,
                 });
               }}
               style={{
@@ -98,44 +97,40 @@ const UserWorkoutsScreen: FunctionComponent = props => {
           <TSCaptionText textStyles={{textAlign: 'center', marginBottom: 22}}>
             No workouts!
           </TSCaptionText>
-          {data && !isLoading ? (
-            <View style={{width: '50%', alignSelf: 'center'}}>
-              <RegularButton
-                underlayColor="#cacaca30"
-                btnStyles={{
-                  backgroundColor: '#cacaca00',
-                  borderTopColor: '#cacaca92',
-                  borderBottomColor: '#cacaca92',
-                  borderWidth: 2,
+          <View style={{width: '50%', alignSelf: 'center'}}>
+            <RegularButton
+              underlayColor="#cacacaFF"
+              btnStyles={{
+                backgroundColor: '#cacaca00',
+                borderTopColor: '#cacaca92',
+                borderBottomColor: '#cacaca92',
+                borderWidth: 2,
+                width: '100%',
+              }}
+              onPress={() => {
+                RootNavigation.navigate('CreateWorkoutGroupScreen', {
+                  ownedByClass: false,
+                  ownerID: 1,
+                });
+              }}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'center',
+                  alignItems: 'center',
                   width: '100%',
-                }}
-                onPress={() => {
-                  RootNavigation.navigate('CreateWorkoutGroupScreen', {
-                    ownedByClass: false,
-                    ownerID: data.user.id,
-                  });
                 }}>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    width: '100%',
-                  }}>
-                  <Icon
-                    name="add"
-                    color={theme.palette.text}
-                    style={{fontSize: 32, marginRight: 16}}
-                  />
-                  <TSParagrapghText>New workout</TSParagrapghText>
-                </View>
-              </RegularButton>
-            </View>
-          ) : (
-            <></>
-          )}
+                <Icon
+                  name="add"
+                  color={theme.palette.text}
+                  style={{fontSize: 32, marginRight: 16}}
+                />
+                <TSParagrapghText>New workout</TSParagrapghText>
+              </View>
+            </RegularButton>
+          </View>
         </View>
-      )} */}
+      )}
     </View>
   );
 };

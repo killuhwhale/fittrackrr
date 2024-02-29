@@ -164,7 +164,7 @@ const CreateWorkoutGroupScreen: FunctionComponent<Props> = ({
 
     try {
       const workoutGroup = await createWorkoutGroup(data).unwrap();
-      console.log('Gym class res', workoutGroup.status);
+      console.log('Gym class res', workoutGroup);
       if (workoutGroup.id) {
         navigation.goBack();
       } else if (workoutGroup.err_type === 1 || workoutGroup.detail) {

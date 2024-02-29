@@ -66,7 +66,13 @@ const AddItem: FunctionComponent<{
   const theme = useTheme();
   const {data, isLoading, isSuccess, isError, error} =
     useGetWorkoutNamesQuery('');
-  const workoutNames = data as [WorkoutNameProps];
+
+  // console.log('Workout item names query result: ', data);
+
+  const workoutNames = data
+    ? (data as WorkoutNameProps[])
+    : ([] as WorkoutNameProps[]);
+
   const workoutNamesMap = workoutNames
     ? new Map(workoutNames.map((workoutName, idx) => [workoutName.name, idx]))
     : new Map();
@@ -219,7 +225,7 @@ const AddItem: FunctionComponent<{
 
   const isPausedItem =
     !isLoading && isSuccess && data && data.length > 0
-      ? data[workoutName].name.match(/pause*/i)
+      ? data[workoutName]?.name?.match(/pause*/i)
       : false;
 
   return (

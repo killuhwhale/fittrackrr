@@ -201,7 +201,7 @@ const WorkoutItemPanel: FunctionComponent<{
         <TSCaptionText>{idx}</TSCaptionText>
       </View>
       <View style={{flex: 4, width: '100%'}}>
-        {isDual(_item) && _item.penalty.length > 0 ? (
+        {_item && isDual(_item) && _item.penalty.length > 0 ? (
           <TouchableHighlight
             onPress={() => {
               setCurrentPenalty(_item.penalty);

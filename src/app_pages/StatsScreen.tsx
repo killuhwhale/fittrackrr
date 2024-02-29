@@ -1,4 +1,4 @@
-import React, {FunctionComponent, useMemo, useState} from 'react';
+import React, {FunctionComponent, useEffect, useMemo, useState} from 'react';
 import {
   Platform,
   ScrollView,
@@ -84,94 +84,95 @@ const StatsScreen: FunctionComponent<Props> = ({
   navigation,
   route: {params},
 }) => {
-  // const theme = useTheme();
-  // const oneday = 1000 * 60 * 60 * 24;
-  // const today = new Date();
-  // const now = today.getTime();
-  // const five_days_ago = new Date(now - oneday * 15);
+  const theme = useTheme();
+  const oneday = 1000 * 60 * 60 * 24;
+  const today = new Date();
+  const now = today.getTime();
+  const five_days_ago = new Date(now - oneday * 15);
 
-  // const [startDate, setStartDate] = useState<Date>(five_days_ago);
-  // const [endDate, setEndDate] = useState<Date>(today);
+  const [startDate, setStartDate] = useState<Date>(five_days_ago);
+  const [endDate, setEndDate] = useState<Date>(today);
 
-  // const {data, isLoading, isSuccess, isError, error} =
-  //   useGetCompletedWorkoutGroupsForUserByDateRangeQuery({
-  //     id: '0',
-  //     startDate: dateFormat(startDate),
-  //     endDate: dateFormat(endDate),
-  //   });
+  const {data, isLoading, isSuccess, isError, error} =
+    useGetCompletedWorkoutGroupsForUserByDateRangeQuery({
+      id: '0',
+      startDate: dateFormat(startDate),
+      endDate: dateFormat(endDate),
+    });
 
-  // const [allWorkouts, workoutTagStats, workoutNameStats] = useMemo(() => {
-  //   if (data && data.length > 0) {
-  //     let _allWorkouts: WorkoutCardProps[] = [];
-  //     let _workoutTagStats: {}[] = [];
-  //     let _workoutNameStats: {}[] = [];
-  //     const calc = new CalcWorkoutStats();
+  useEffect(() => {
+    console.log('Stats data: ', data);
+  });
+  const [allWorkouts, workoutTagStats, workoutNameStats] = useMemo(() => {
+    if (data && data.length > 0) {
+      let _allWorkouts: WorkoutCardProps[] = [];
+      let _workoutTagStats: {}[] = [];
+      let _workoutNameStats: {}[] = [];
+      const calc = new CalcWorkoutStats();
 
-  //     data.forEach((workoutGroup: WorkoutGroupProps) => {
-  //       const workouts: WorkoutCardProps[] =
-  //         (workoutGroup.completed_workouts
-  //           ? workoutGroup.completed_workouts
-  //           : workoutGroup.workouts) ?? [];
+      data.forEach((workoutGroup: WorkoutGroupProps) => {
+        console.log('Giving date as for_date: ', workoutGroup);
+        const workouts: WorkoutCardProps[] = workoutGroup.workouts ?? [];
 
-  //       _allWorkouts.push(...workouts); // Collect all workouts for bar data
+        _allWorkouts.push(...workouts); // Collect all workouts for bar data
 
-  //       calc.calcMulti(workouts);
-  //       const [tags, names] = calc.getStats();
-  //       _workoutTagStats.push({...tags, date: workoutGroup.for_date});
-  //       _workoutNameStats.push({...names, date: workoutGroup.for_date});
-  //       calc.reset();
-  //     });
-  //     return [_allWorkouts, _workoutTagStats, _workoutNameStats];
-  //   }
-  //   return [[], [], []];
-  // }, [data]);
+        calc.calcMulti(workouts);
+        const [tags, names] = calc.getStats();
+        _workoutTagStats.push({...tags, date: workoutGroup.for_date});
+        _workoutNameStats.push({...names, date: workoutGroup.for_date});
+        calc.reset();
+      });
+      return [_allWorkouts, _workoutTagStats, _workoutNameStats];
+    }
+    return [[], [], []];
+  }, [data]);
 
-  // // console.log('\n\n', 'WorkotuTag Stats: ', workoutTagStats, '\n\n');
+  // console.log('\n\n', 'WorkotuTag Stats: ', workoutTagStats, '\n\n');
 
-  // const [tags, names] = useMemo(() => {
-  //   const calc = new CalcWorkoutStats();
-  //   calc.calcMulti(allWorkouts);
-  //   return calc.getStats();
-  // }, [allWorkouts, data]);
+  const [tags, names] = useMemo(() => {
+    const calc = new CalcWorkoutStats();
+    calc.calcMulti(allWorkouts);
+    return calc.getStats();
+  }, [allWorkouts, data]);
 
-  // const tagLabels: string[] = Array.from(new Set(Object.keys(tags)));
-  // const nameLabels: string[] = Array.from(new Set(Object.keys(names)));
+  const tagLabels: string[] = Array.from(new Set(Object.keys(tags)));
+  const nameLabels: string[] = Array.from(new Set(Object.keys(names)));
 
-  // // I dont need to show all of these
-  // // This is on both Bar and Line Chart....
-  // // But if the current dataset shows zero for one of these, it should not show.
-  // const dataTypes = [
-  //   'totalDistanceM',
-  //   'totalKgM',
-  //   'totalKgSec',
-  //   'totalKgs',
-  //   'totalLbM',
-  //   'totalLbSec',
-  //   'totalLbs',
-  //   'totalReps',
-  //   'totalTime',
-  // ];
+  // I dont need to show all of these
+  // This is on both Bar and Line Chart....
+  // But if the current dataset shows zero for one of these, it should not show.
+  const dataTypes = [
+    'totalDistanceM',
+    'totalKgM',
+    'totalKgSec',
+    'totalKgs',
+    'totalLbM',
+    'totalLbSec',
+    'totalLbs',
+    'totalReps',
+    'totalTime',
+  ];
 
-  // // Abbrev. for dataTypes
-  // const dataTypeYAxisSuffix = [
-  //   'm',
-  //   'kg*m',
-  //   'kg*sec',
-  //   'kgs',
-  //   'lb*m',
-  //   'lb*sec',
-  //   'lbs',
-  //   'reps',
-  //   'sec',
-  // ];
+  // Abbrev. for dataTypes
+  const dataTypeYAxisSuffix = [
+    'm',
+    'kg*m',
+    'kg*sec',
+    'kgs',
+    'lb*m',
+    'lb*sec',
+    'lbs',
+    'reps',
+    'sec',
+  ];
 
-  // const dataReady = workoutTagStats.length || workoutNameStats.length;
+  const dataReady = workoutTagStats.length || workoutNameStats.length;
 
   return (
     <ScreenContainer>
       {/* Date Picker */}
       <BannerAddMembership />
-      {/* <View style={{flex: 2, width: '100%', alignItems: 'center'}}>
+      <View style={{flex: 2, width: '100%', alignItems: 'center'}}>
         <View
           style={{
             flexDirection: 'row',
@@ -257,7 +258,7 @@ const StatsScreen: FunctionComponent<Props> = ({
             <></>
           )}
         </ScrollView>
-      </View> */}
+      </View>
     </ScreenContainer>
   );
 };

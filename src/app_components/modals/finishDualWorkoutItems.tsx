@@ -116,6 +116,7 @@ const FinishDualWorkoutItems: FunctionComponent<{
   bodyText: string;
   workoutGroup: WorkoutGroupProps;
   setShowFinishWorkoutGroupModal(show: boolean): void;
+  finishWorkoutGroup(): Promise<void>;
 }> = ({
   modalVisible,
   onRequestClose,
@@ -123,13 +124,13 @@ const FinishDualWorkoutItems: FunctionComponent<{
   bodyText,
   workoutGroup,
   setShowFinishWorkoutGroupModal,
+  finishWorkoutGroup,
 }) => {
   const theme = useTheme();
   let initGroup = jsonCopy(workoutGroup) as WorkoutGroupProps;
+
   const [editedWorkoutGroup, setEditedWorkoutGroup] =
     useState<WorkoutGroupProps>(initGroup);
-
-  const [updateWorkout, isUpdateLoading] = useUpdateWorkoutDualItemsMutation();
 
   useEffect(() => {
     // Our copy of initGroup does not have data on first render since we are fetching from API. onces its ready, fill it
@@ -192,7 +193,8 @@ const FinishDualWorkoutItems: FunctionComponent<{
     };
   };
 
-  const [finishWorkoutGroup, isLoading] = useFinishWorkoutGroupMutation();
+  const [updateWorkout, isUpdateLoading] = useUpdateWorkoutDualItemsMutation();
+
   const submitFinalWorkoutDualItems = () => {
     const promises: Promise<any>[] =
       editedWorkoutGroup.workouts
@@ -202,6 +204,7 @@ const FinishDualWorkoutItems: FunctionComponent<{
         .map((workout: WorkoutCardProps) => {
           const data = new FormData();
           data.append('workout', workout.id);
+          data.append('workoutgroup_id', workoutGroup.id);
           // If the user just submits the form without updating the values, we need to push the default values from reps, duration, distance to r_reps, etc...
           const updatedItems = workout.workout_items?.map(
             (_item: WorkoutDualItemProps, idx: number) => {
@@ -237,10 +240,8 @@ const FinishDualWorkoutItems: FunctionComponent<{
             // Send Finish Workout request
 
             try {
-              const data = new FormData();
-              data.append('group', editedWorkoutGroup.id);
-              const res = await finishWorkoutGroup(data).unwrap();
-              console.log('res finsih', res);
+              console.log('Calling finishWorkoutGroup, dual items updated!');
+              await finishWorkoutGroup();
 
               // Close Modal
               onRequestClose();
@@ -285,6 +286,7 @@ const FinishDualWorkoutItems: FunctionComponent<{
                       {containsDualItems ? (
                         <>
                           <TSCaptionText>{workout.title}</TSCaptionText>
+
                           {workout.workout_items?.map((item, itemIdx) => {
                             return (
                               <View

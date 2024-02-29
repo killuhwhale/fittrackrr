@@ -5,191 +5,20 @@ import {
   fetchBaseQuery,
 } from '@reduxjs/toolkit/query/react';
 
-// import EncryptedStorage from 'react-native-encrypted-storage';
-import RNSecureStorage, {ACCESSIBLE} from 'killuhwhal3-rn-secure-storage';
-
 import {BASEURL} from '../../utils/constants';
-import {
-  authDelete,
-  authGet,
-  authPost,
-  refreshAccessToken,
-} from '../../utils/fetchAPI';
-import auth from '../../utils/auth';
 import {Member} from '../../app_components/modals/types';
+// import EncryptedStorage from 'react-native-encrypted-storage';
+// import RNSecureStorage, {ACCESSIBLE} from 'killuhwhal3-rn-secure-storage';
+// import auth from '../../utils/auth';
+// import {
+//   authDelete,
+//   authGet,
+//   authPost,
+//   refreshAccessToken,
+// } from '../../utils/fetchAPI';
 // import CREATE_WORKOUT_GROUPS from './workoutGroupsSQL';
-import {
-  CREATE_WORKOUTS,
-  CREATE_WORKOUT_CATEGORIES,
-  CREATE_WORKOUT_GROUPS,
-  CREATE_WORKOUT_ITEMS,
-  CREATE_WORKOUT_NAMES,
-} from './schema';
-import SQLite from 'react-native-sqlite-storage';
-import RNFS from 'react-native-fs';
 
-const db = SQLite.openDatabase(
-  {
-    name: 'fittrackrr',
-    location: 'default',
-  },
-  () => {
-    console.log('Database opened');
-  },
-  error => {
-    console.log('Error: ' + error);
-  },
-);
-db.executeSql('PRAGMA foreign_keys = ON;');
-
-function create(db) {
-  db.transaction(tx => {
-    [
-      CREATE_WORKOUT_GROUPS,
-      CREATE_WORKOUT_CATEGORIES,
-      CREATE_WORKOUTS,
-      CREATE_WORKOUT_NAMES,
-      CREATE_WORKOUT_ITEMS,
-    ].map(sql => {
-      tx.executeSql(
-        sql,
-        [],
-        () => {
-          console.log('Create successful');
-        },
-        error => {
-          console.log('Error: ' + error);
-        },
-      );
-    });
-  });
-}
-
-create(db);
-
-// db.transaction(tx => {
-//   tx.executeSql(
-//     'SELECT * FROM Users',
-//     [],
-//     (tx, results) => {
-//       var len = results.rows.length;
-//       for (let i = 0; i < len; i++) {
-//         let row = results.rows.item(i);
-//         console.log(`ID: ${row.id}, Name: ${row.name}, Age: ${row.age}`);
-//       }
-//     },
-//     error => { console.log('Error: ' + error); }
-//   );
-// });
-
-function fetchSQL(query) {
-  return new Promise((res, rej) => {
-    db.transaction(tx => {
-      tx.executeSql(
-        query,
-        [],
-        (tx, results) => {
-          res(results);
-          // var len = results.rows.length;
-          // for (let i = 0; i < len; i++) {
-          //   let row = results.rows.item(i);
-          //   console.log(`ID: ${row.id}, Name: ${row.name}, Age: ${row.age}`);
-          // }
-        },
-        error => {
-          console.log('Error: ' + error);
-          rej(error);
-        },
-      );
-    });
-  });
-}
-
-async function fetchAPI(url, method, data) {
-  // Switch on url to generate the query
-  let query = '';
-  if (!method) {
-    method = 'GET';
-  }
-  if (!data) {
-    data = {};
-  }
-
-  console.log('FetchAPI: ', method, url, data);
-  // Figure out the query.
-
-  /**
-   *
-   *  Write all the queries for this to work and we should be getting started!!!!
-   *
-   *
-   *
-   *
-   */
-  switch (url) {
-    case 'WorkoutGroups':
-      switch (method) {
-        case 'POST':
-          // Post to WorkoutGroups
-          query = 'INSERT INTO WORKOUTITEMS ()';
-          break;
-        case 'GET':
-          query = 'SELECT FROM WORKOUTITEMS ()';
-          break;
-        case 'DELETE':
-          query = 'DELETE FROM WORKOUTITEMS ()';
-          break;
-        default:
-          break;
-      }
-      break;
-
-    case 'Workouts':
-      switch (method) {
-        case 'POST':
-          // Post to WorkoutGroups
-          query = 'INSERT INTO WORKOUTITEMS ()';
-          break;
-        case 'GET':
-          query = 'SELECT FROM WORKOUTITEMS ()';
-          break;
-        case 'DELETE':
-          query = 'DELETE FROM WORKOUTITEMS ()';
-          break;
-        default:
-          break;
-      }
-      break;
-
-    case 'WorkoutItems':
-      switch (method) {
-        case 'POST':
-          // Post to WorkoutGroups
-          query = 'INSERT INTO WORKOUTITEMS ()';
-          break;
-        case 'GET':
-          query = 'SELECT FROM WORKOUTITEMS ()';
-          break;
-        case 'DELETE':
-          query = 'DELETE FROM WORKOUTITEMS ()';
-          break;
-        default:
-          break;
-      }
-      break;
-
-    default:
-      break;
-  }
-
-  // Execute Query
-  try {
-    return await fetchSQL(query);
-  } catch (err) {
-    console.log('Error with API: ', err);
-  }
-  return null;
-}
+import {fetchAPI} from './api';
 
 const asyncBaseQuery =
   (
@@ -247,7 +76,7 @@ const asyncBaseQuery =
 
       return {data: result};
     } catch (err: any) {
-      console.log('Errorzzzzzz: ', err);
+      console.log('API Slice Errorzzzzzz: ', err);
       return {
         error: {
           status: 0,
@@ -505,12 +334,16 @@ export const apiSlice = createApi({
       },
       providesTags: (result, error, arg) => {
         console.log('Provides tag, WorkoutGroupWorkouts: ', arg);
-        return [{type: 'WorkoutGroupWorkouts', id: arg}];
+        return [
+          {type: 'WorkoutGroupWorkouts', id: arg},
+          'WorkoutGroupWorkouts',
+          'UserWorkoutGroups',
+        ];
       },
     }),
     createWorkoutGroup: builder.mutation({
       query: (data = {}) => ({
-        url: 'workoutGroups/',
+        url: 'workoutGroups/POST/',
         method: 'POST',
         data: data,
         params: {contentType: 'multipart/form-data'},
@@ -525,7 +358,7 @@ export const apiSlice = createApi({
     }),
     finishWorkoutGroup: builder.mutation({
       query: (data = {}) => ({
-        url: 'workoutGroups/finish/',
+        url: 'workoutGroups/finish/POST/',
         method: 'POST',
         data: data,
         params: {contentType: 'multipart/form-data'},
@@ -533,19 +366,14 @@ export const apiSlice = createApi({
       invalidatesTags: (result, error, arg) => {
         // inavlidates query for useGetWorkoutsForGymClassWorkoutGroupQuery
         const data = new Map<string, string>(arg._parts);
-
-        return [
-          {type: 'WorkoutGroupWorkouts', id: data.get('group')},
-          'DailySnapshot',
-        ];
+        console.log('finishWorkoutGroup invalidatesTags: ', arg);
+        return ['WorkoutGroupWorkouts', 'UserWorkoutGroups', 'DailySnapshot'];
       },
     }),
     deleteWorkoutGroup: builder.mutation({
       query: data => {
-        const mapData = new Map<string, string>(data._parts);
-
         return {
-          url: `workoutGroups/${mapData.get('id')}/`,
+          url: `workoutGroups/${data}/DELETE/`,
           method: 'DELETE',
           data,
           params: {contentType: 'multipart/form-data'},
@@ -565,7 +393,7 @@ export const apiSlice = createApi({
 
     createWorkout: builder.mutation({
       query: (data = {}) => ({
-        url: 'workouts/',
+        url: 'workouts/POST/',
         method: 'POST',
         data: data,
         params: {contentType: 'multipart/form-data'},
@@ -585,7 +413,7 @@ export const apiSlice = createApi({
         const data = new Map<string, string>(arg._parts);
 
         return {
-          url: `workouts/${data.get('id')}/`,
+          url: `workouts/${data.get('id')}/DELETE/`,
           method: 'DELETE',
           data: {nonemptystupidandroid: 1},
           params: {contentType: 'multipart/form-data'},
@@ -603,7 +431,7 @@ export const apiSlice = createApi({
 
     createWorkoutItems: builder.mutation({
       query: (data = {}) => ({
-        url: 'workoutItems/items/',
+        url: 'workoutItems/items/POST/',
         method: 'POST',
         data: data,
         params: {contentType: 'multipart/form-data'},
@@ -626,7 +454,7 @@ export const apiSlice = createApi({
 
     createWorkoutDualItems: builder.mutation({
       query: (data = {}) => ({
-        url: 'workoutDualItems/items/',
+        url: 'workoutDualItems/items/POST/',
         method: 'POST',
         data: data,
         params: {contentType: 'multipart/form-data'},
@@ -649,7 +477,7 @@ export const apiSlice = createApi({
 
     updateWorkoutDualItems: builder.mutation({
       query: (data = {}) => ({
-        url: 'workoutDualItems/record_items/',
+        url: 'workoutDualItems/record_items/POST/',
         method: 'POST',
         data: data,
         params: {contentType: 'multipart/form-data'},
@@ -867,12 +695,11 @@ export const {
   useDeleteGymClassMutation,
 
   useFinishWorkoutGroupMutation,
-
   useDeleteWorkoutMutation,
   useCreateWorkoutGroupMutation,
-  useDeleteWorkoutGroupMutation,
   useCreateWorkoutMutation,
   useCreateWorkoutItemsMutation,
+  useDeleteWorkoutGroupMutation,
   useCreateWorkoutDualItemsMutation,
   useUpdateWorkoutDualItemsMutation,
   useCreateCompletedWorkoutMutation,
