@@ -1,3 +1,7 @@
+Local Version, no API, SQLite3 DB version....
+
+
+
 - Privacy Policy - add https://fittrackrr.com/privacy
 - Delete Account w/ all data - add https://fittrackrr.com/removeAccount
 
@@ -72,9 +76,9 @@ adb -s 710KPMZ0409387 reverse tcp:8081 tcp:8081
 adb -s 710KPMZ0409387 reverse tcp:8000 tcp:8000
 
 emulator -noaudio -avd Pixel_4_API_30 &
-npx react-native run-android --active-arch-only
 adb -s emulator-5554 reverse tcp:8081 tcp:8081
 adb -s emulator-5554 reverse tcp:8000 tcp:8000
+npx react-native run-android --active-arch-only
 npx react-native start
 
 Android SQL File
@@ -91,7 +95,12 @@ adb shell
 
 ## /data/data/com.fitform/databases
 
+adb root
+adb shell
+cd /data/data/com.fitform/databases
 sqlite3 fittrackrr
+.headers ON
+.mode column
 
 
 
@@ -155,10 +164,9 @@ Restore Database: .restore main [file_name.db]
 All standard SQL commands (SELECT, INSERT, UPDATE, DELETE, etc.) are supported in SQLite3.
 
 ## Formatting and Preferences
-Turn on Header Display: .headers ON
+Turn on Header Display:
 Turn on Column Mode: .mode column
 Set Output Format: .mode [mode] (e.g., .mode csv)
-
 
 // When building your android app locally, by default you build all the 4 Application
 // Binary Interfaces (ABIs) : armeabi-v7a, arm64-v8a, x86 & x86_64.
